@@ -6,26 +6,40 @@ use Core\Base\Controller;
 use Core\Helpers\Helper;
 use Core\Model\User;
 
-
+/**
+ * handle the user operation
+ */
 class Users extends Controller
 {
+
+        /**
+         * redirect the user
+         *
+         * @return void
+         */
         public function render()
         {
                 if (!empty($this->view))
                         $this->view();
         }
 
-        // function __construct()
-        // {
-        //         $this->auth();
-        //         $this->admin_view(true);
-        // }
-
+        
+        /**
+         * display the dashboard
+         *
+         * @return void
+         */
         public function index()
         {
                 $this->view = 'dashboard';
         }
 
+
+        /**
+         * display the user profile
+         *
+         * @return void
+         */
         public function profile()
         {
                 $this->view = 'profile-form';
@@ -33,6 +47,12 @@ class Users extends Controller
                 $this->data=(array)$user->get_by_id($_SESSION['user']['id']);
         }
 
+
+        /**
+         * display users management dashboard
+         *
+         * @return void
+         */
         public function users_management()
         {
                 $this->view = 'display-users';
@@ -40,6 +60,12 @@ class Users extends Controller
                 $this->data=$user->get_all();
         }
         
+
+        /**
+         * display update profile form
+         *
+         * @return void
+         */
         public function update_profile_form()
         {
                 $this->view = 'update-profile-form';
@@ -47,6 +73,12 @@ class Users extends Controller
                 $this->data=(array)$user->get_by_id($_GET['id']);
         }
 
+
+        /**
+         * update the user profile
+         *
+         * @return void
+         */
         public function update_profile()
         {
                 if(!empty($_POST))
@@ -60,7 +92,7 @@ class Users extends Controller
                                 'username'=>$_POST['username'],
                                 'display_name'=>$_POST['display_name'],
                                 'email'=>$_POST['email'],
-                                'password'=>$_POST['password'],
+                                'password'=>password_hash($_POST['password'],PASSWORD_DEFAULT),
                                 'user_image'=> $_FILES['file']['name']
                         );
                         
@@ -69,23 +101,38 @@ class Users extends Controller
                         move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
                         $_SESSION['user']['user_image']= $_POST['user_image']; 
                 }
+ 
+                $_POST['password']=password_hash($_POST['password'],PASSWORD_DEFAULT);
                 $user=new User();
                 $user->update($_POST);
+
                 $_SESSION['user']['username']= $_POST['username'];
                 $_SESSION['user']['display_name']= $_POST['display_name'];
                 $_SESSION['user']['email']= $_POST['email'];
-                $_SESSION['user']['password']= $_POST['password'];  
+                
                    
             } 
                                
                 Helper::redirect('/dashboard');
         }
 
+
+        /**
+         * display create user form
+         *
+         * @return void
+         */
         public function create_user_form()
         {
                 $this->view = 'create-user-form';
         }
 
+
+        /**
+         * create new user on the database
+         *
+         * @return void
+         */
         public function save_user()
         {
                 if(!empty($_POST))
@@ -98,7 +145,7 @@ class Users extends Controller
                                 'username'=>$_POST['username'],
                                 'display_name'=>$_POST['display_name'],
                                 'email'=>$_POST['email'],
-                                'password'=>$_POST['password'],
+                                'password'=>password_hash($_POST['password'],PASSWORD_DEFAULT),
                                 'permission'=>$_POST['permission'],
                                 'user_image'=> $_FILES['file']['name']
                         );
@@ -107,12 +154,19 @@ class Users extends Controller
                         $uploadfile = $uploaddir . basename($_FILES['file']['name']);
                         move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
                 }
+                $_POST['password']=password_hash($_POST['password'],PASSWORD_DEFAULT);
                 $user = new User();
                 $user->create($_POST);
             }     
                 Helper::redirect('/users-management');
         }
 
+
+        /**
+         * display update user form
+         *
+         * @return void
+         */
         public function update_user_form()
         {
                 $this->view = 'update-user-form';
@@ -120,6 +174,12 @@ class Users extends Controller
                 $this->data=(array)$user->get_by_id($_GET['id']);
         }
         
+
+        /**
+         * display single user information
+         *
+         * @return void
+         */
         public function single_user()
         {
                 $this->view = 'single-user';
@@ -127,6 +187,12 @@ class Users extends Controller
                 $this->data=(array)$user->get_by_id($_GET['id']);
         }
 
+
+        /**
+         * update single user information
+         *
+         * @return void
+         */
         public function update_user()
         {
                 if(!empty($_POST))
@@ -140,7 +206,7 @@ class Users extends Controller
                                 'username'=>$_POST['username'],
                                 'display_name'=>$_POST['display_name'],
                                 'email'=>$_POST['email'],
-                                'password'=>$_POST['password'],
+                                'password'=>password_hash($_POST['password'],PASSWORD_DEFAULT),
                                 'permission'=>$_POST['permission'],
                                 'user_image'=> $_FILES['file']['name']
                         );
@@ -149,6 +215,7 @@ class Users extends Controller
                         $uploadfile = $uploaddir . basename($_FILES['file']['name']);
                         move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
                 }
+                $_POST['password']=password_hash($_POST['password'],PASSWORD_DEFAULT);
                 $user=new User();
                 $user->update($_POST);  
             }     
@@ -156,6 +223,12 @@ class Users extends Controller
                 Helper::redirect('/users-management');
         }
 
+
+        /**
+         * delete user from the database
+         *
+         * @return void
+         */
         public function delete_user()
         {
                 $user =new User();

@@ -9,15 +9,31 @@ use Core\Model\user;
 use Core\Model\Reletional;
 use Core\Model\Transaction;
 
+
+/**
+ * handle transaction operations
+ */
 class Transactions extends Controller
 {
 
+
+    /**
+     * redirect the user
+     *
+     * @return void
+     */
     public function render()
     {
          if (!empty($this->view))
                 $this->view();
     }
 
+
+    /**
+     * display selling dashboard
+     *
+     * @return void
+     */
     public function selling_dashboard()
     {
         $this->view="selling-dashboard";
@@ -25,11 +41,23 @@ class Transactions extends Controller
         $this->data=$item->available_items();
     }
     
+
+    /**
+     * display user record form
+     *
+     * @return void
+     */
     public function user_record()
     {
         $this->view="user-record";
     }
     
+
+    /**
+     * display all transactions from the database
+     *
+     * @return void
+     */
     public function display_records()
     {
         $this->view="display-records";
@@ -37,6 +65,12 @@ class Transactions extends Controller
         $this->data=$transaction->get_all();
     }
     
+
+    /**
+     * delete record from the database
+     *
+     * @return void
+     */
     public function delete_record()
     {
         Helper::redirect("/records-dashboard");
@@ -50,6 +84,12 @@ class Transactions extends Controller
         $reletional->delete_by_sql("DELETE FROM `reletional` WHERE transaction_id=$id");
     }
     
+
+    /**
+     * display update record form
+     *
+     * @return void
+     */
     public function update_record_form()
     {
         $transaction=new Transaction;
@@ -57,6 +97,12 @@ class Transactions extends Controller
         $this->view="update-record-form";
     }
     
+
+    /**
+     * update record information on the database
+     *
+     * @return void
+     */
     public function update_record()
     {
         $data=array(
@@ -70,6 +116,12 @@ class Transactions extends Controller
         Helper::redirect("/records-dashboard");
     }
 
+
+    /**
+     * display info dashboard
+     *
+     * @return void
+     */
     public function info_dashboard()
     {
         $transaction=new Transaction;
@@ -86,7 +138,11 @@ class Transactions extends Controller
             $money+=$trns->total;
         }
 
-        $items_qty=count($item->get_all());
+        $all_items=$item->get_all();
+        $items_qty=0;
+        foreach ($all_items as $qty) {
+            $items_qty+=$qty->quantity;
+        }
         
         $users_qty=count($user->get_all());
 
@@ -107,5 +163,19 @@ class Transactions extends Controller
             "users_qty"=>$users_qty,
             "top_expensive"=>$top_expensive
         );
+    }
+
+
+
+    /**
+     * display single transaction information
+     *
+     * @return void
+     */
+    public function single_transaction()
+    {
+        $transaction=new Transaction;
+        $this->data=(array)$transaction->get_by_id($_GET['id']);
+        $this->view="single-record";
     }
 }

@@ -14,17 +14,28 @@ class Api extends Controller
         protected $request_body;
         protected $http_code = 200;
 
+
         protected $response_schema = array(
                 "success" => true, // to provide the response status.
                 "message_code" => "", // to provide message code for the front-end developer for a better error handling
                 "body" => []
         );
 
+
+        /**
+         * constructer of the class
+         */
         function __construct()
         {
                 $this->request_body = (array) json_decode(file_get_contents("php://input"));
         }
 
+
+        /**
+         * redirect the user
+         *
+         * @return void
+         */
         public function render()
         {
                 header("Content-Type: application/json"); // changes the header information
@@ -32,42 +43,17 @@ class Api extends Controller
                 echo json_encode($this->response_schema); // convert the data to json format
         }
 
-        // function posts()
-        // {
-        //         try {
-        //                 $post = new Post;
-        //                 $posts = $post->get_all();
-        //                 if (empty($posts)) {
-        //                         throw new \Exception('No posts were found!');
-        //                 }
-        //                 $this->response_schema['body'] = $posts;
-        //                 $this->response_schema['message_code'] = "posts_collected_successfuly";
-        //         } catch (\Exception $error) {
-        //                 $this->response_schema['success'] = false;
-        //                 $this->response_schema['message_code'] = $error->getMessage();
-        //                 $this->http_code = 404;
-        //         }
-        // }
 
-        // function posts_create()
-        // {
-        //         self::check_if_empty($this->request_body);
-        //         try {
-        //                 $post = new Post;
-        //                 $post->create($this->request_body);
-        //                 $this->response_schema['message_code'] = "post_created_successfuly";
-        //         } catch (\Exception $error) {
-        //                 $this->response_schema['message_code'] = "post_was_not_created";
-        //                 $this->http_code = 421;
-        //         }
-        // }
-
+        /**
+         * get all user transaction for the current day from the database
+         *
+         * @return void
+         */
         function get_transaction()
         {
                 try {
-                        //$user_record=array();
                         $transaction=new Transaction;
-                        $reletion=$transaction->get_by_user_id($this->request_body);
+                        $reletion=$transaction->get_by_user_id();
                         
                         foreach ($reletion as $value) {
                                $user_record[]=$transaction->get_by_transaction_id($value->transaction_id);
@@ -77,11 +63,17 @@ class Api extends Controller
 
                         $this->response_schema['message_code'] = "successful";
                         } catch (\Exception $error) {
-                                        $this->response_schema['message_code'] = "not_successful";
+                                        $this->response_schema['message_code'] = "The operation was not successful";
                                         $this->http_code = 421;
                                 }
         }
         
+        
+        /**
+         * create new transaction
+         *
+         * @return void
+         */
         function create_transaction()
         {
                         $item=new Item();
@@ -111,10 +103,10 @@ class Api extends Controller
                                 "quantity"=>$item_data->quantity-$this->request_body['item_quantity']
                             );
                             $item->update($new_quentity); 
-                            $this->response_schema['message_code'] = "transaction_created_successfuly";
+                            $this->response_schema['message_code'] = "transaction created successfuly";
 
                             } catch (\Exception $error) {
-                                    $this->response_schema['message_code'] = "transaction_was_not_created";
+                                    $this->response_schema['message_code'] = "transaction was not created";
                                     $this->http_code = 421;
                             }
                 }
@@ -125,4 +117,51 @@ class Api extends Controller
 
 
         }
+
+
+        /**
+         * update user transaction
+         *
+         * @return void
+         */
+        function update_transaction()
+        {
+                try {
+                        $transaction=new Transaction;
+                        $transaction->update($this->request_body);
+
+                        $this->response_schema['message_code'] = "successful";
+                        } catch (\Exception $error) {
+                                        $this->response_schema['message_code'] = "update was not successful";
+                                        $this->http_code = 421;
+                                }
+
+        }
+        
+
+        /**
+         * delete user transaction
+         *
+         * @return void
+         */
+        function delete_transaction()
+        {
+                try {
+                        $id=$this->request_body['id'];
+
+                        $transaction=new Transaction;
+                        $this->data=$transaction->delete($id);
+
+                        $reletional=new Reletional;
+                        $reletional->delete_by_sql("DELETE FROM `reletional` WHERE transaction_id=$id");
+
+                        $this->response_schema['message_code'] = "successful";
+                        } catch (\Exception $error) {
+                                        $this->response_schema['message_code'] = "delete was not successful";
+                                        $this->http_code = 421;
+                                }
+
+        }
+
+
 }

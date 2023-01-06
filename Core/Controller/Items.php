@@ -6,16 +6,32 @@ use Core\Base\Controller;
 use Core\Helpers\Helper;
 use Core\Model\Item;
 
+
+/**
+ * handle item operations
+ */
 class Items extends Controller
 {
     private $user = null;
 
+
+        /**
+         * redirect the user
+         *
+         * @return void
+         */
         public function render()
         {
                 if (!empty($this->view))
                         $this->view();
         }
 
+        
+        /**
+         * display dashboard
+         *
+         * @return void
+         */
         public function dashboard()
         {
             $item = new Item();
@@ -24,6 +40,11 @@ class Items extends Controller
         } 
     
         
+        /**
+         * display information of a single item
+         *
+         * @return void
+         */
         public function single_item()
         {
             $item=new Item();
@@ -31,6 +52,12 @@ class Items extends Controller
             $this->view="single-item";
         }
         
+
+        /**
+         * display update item form
+         *
+         * @return void
+         */
         public function update_item_form()
         {
             $item=new Item();
@@ -38,6 +65,12 @@ class Items extends Controller
             $this->view="update-item-form";
         }
         
+
+        /**
+         * update item information on the database
+         *
+         * @return void
+         */
         public function update_item()
         {
             if(!empty($_FILES['file']['name']))
@@ -62,6 +95,12 @@ class Items extends Controller
             Helper::redirect('stock-dashboard');
         }
 
+
+        /**
+         * delete item from the database
+         *
+         * @return void
+         */
         public function delete_item()
         {
             $item=new Item();
@@ -69,11 +108,23 @@ class Items extends Controller
             Helper::redirect('stock-dashboard');
         }
         
+
+        /**
+         * display create item form
+         *
+         * @return void
+         */
         public function create_item_form()
         {
             $this->view='create-item-form';
         }
         
+
+        /**
+         * create new item on the database
+         *
+         * @return void
+         */
         public function create_item()
         {
             if(!empty($_POST))
@@ -100,11 +151,43 @@ class Items extends Controller
             Helper::redirect('stock-dashboard');
         }
 
+
+        /**
+         * display out of stock form
+         *
+         * @return void
+         */
         public function out_of_stock()
         {
             $item= new Item();
             $this->data=$item->out_of_stock();
             $this->view="out-of-stock";
+        }
+        
+
+        /**
+         * display restock form
+         *
+         * @return void
+         */
+        public function restock()
+        {
+            $item= new Item();
+            $this->data=$item->get_all();
+            $this->view="restock";
+        }
+        
+
+        /**
+         * update single item quantity
+         *
+         * @return void
+         */
+        public function update_item_quantity()
+        {
+            $item=new Item;
+            $item->update($_POST);
+            $this->restock();
         }
 
 }

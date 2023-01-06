@@ -4,24 +4,29 @@ namespace Core\Model;
 
 use Core\Base\Model;
 
+
+/**
+ * handle operations on user table
+ */
 class User extends Model
 {
 
-    // const ADMIN = array(
-    //     "post:read", "post:create", "post:update", "post:delete",
-    //     "user:read", "user:create", "user:update", "user:delete",
-    //     "tag:read", "tag:create", "tag:update", "tag:delete"
-    // );
 
-    // const EDITOR = array(
-    //     "post:read", "post:create", "post:update",
-    //     "tag:read", "tag:create", "tag:update"
-    // );
-
-
+    /**
+     * check the username and password
+     *
+     * @param string $username
+     * @return void
+     */
     public function check_username(string $username)
     {
-        $result = $this->connection->query("SELECT * FROM $this->table WHERE username='$username'");
+        //$result = $this->connection->query("SELECT * FROM $this->table WHERE username='$username'");
+
+        $stmt=$this->connection->prepare("SELECT * FROM $this->table WHERE username=?");
+        $stmt->bind_param('s',$username);
+        $stmt->execute();
+        $result=$stmt->get_result();
+
         if ($result) { // if there is an error in the connection or if there is syntax error in the SQL.
             if ($result->num_rows > 0) {
                 return $result->fetch_object();
@@ -32,15 +37,4 @@ class User extends Model
             return false;
         }
     }
-
-    // public function get_permissions(): array
-    // {
-    //     $permissions = array();
-    //     $user = $this->get_by_id($_SESSION['user']['user_id']);
-    //     if ($user) {
-    //         // $permissions = \explode(',', $user->permissions);
-    //         $permissions = \unserialize($user->permissions);
-    //     }
-    //     return $permissions;
-    // }
 }

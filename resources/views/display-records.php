@@ -1,3 +1,13 @@
+<?PHP
+
+if($_SESSION['user']['permission']=="admin"){}
+elseif($_SESSION['user']['permission']=="accountant"){}
+else{
+   header('Location: 404.php'); 
+}
+
+?>
+
 <div class="text-center" style="margin :5rem;">
         <h1 class="border-bottom border-3 m-auto w-50"><i class="fa-solid fa-list-check"></i> Transaction Management</h1>
 </div>

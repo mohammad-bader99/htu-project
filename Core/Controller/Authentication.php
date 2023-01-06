@@ -6,22 +6,42 @@ use Core\Base\Controller;
 use Core\Helpers\Helper;
 use Core\Model\User;
 
+
+/**
+ * handle the user Authentication
+ */
 class Authentication extends Controller
 {
 
+        
+        /**
+         * redirect the user
+         *
+         * @return void
+         */
         public function render()
         {
                 if (!empty($this->view))
                         $this->view();
         }
 
+
+        /**
+         * display the login form
+         *
+         * @return void
+         */
         public function login()
         {
                 $this->view = 'login-form';
         }
 
         
-
+        /**
+         * check the username and password
+         *
+         * @return void
+         */
         public function validation()
         {
 
@@ -32,8 +52,8 @@ class Authentication extends Controller
                 if (!$logged_in_user) {
                         $this->invalid_redirect();
                 }
-
-                if ($_POST['password']!= $logged_in_user->password) {
+                
+                if (!password_verify($_POST['password'],$logged_in_user->password)) {
                         $this->invalid_redirect();
                 }
 
@@ -50,7 +70,6 @@ class Authentication extends Controller
                         'username' => $logged_in_user->username,
                         'display_name' => $logged_in_user->display_name,
                         'email' => $logged_in_user->email,
-                        'password' => $logged_in_user->password,
                         'permission' => $logged_in_user->permission,
                         'user_image' => $logged_in_user->user_image
                 );
@@ -61,6 +80,11 @@ class Authentication extends Controller
         }
 
 
+        /**
+         * clear the user information when the user logout
+         *
+         * @return void
+         */
         public function logout()
         {
                 \session_destroy();
@@ -69,6 +93,12 @@ class Authentication extends Controller
                 Helper::redirect('/');
         }
 
+
+        /**
+         * return the user to login form if the username or password is wrong
+         *
+         * @return void
+         */
         private function invalid_redirect()
         {
                 $_SESSION['error'] = "Invalid Username or Password";

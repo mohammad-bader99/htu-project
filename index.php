@@ -49,6 +49,8 @@ Router::get('/update-profile-form', "users.update_profile_form"); // Displays up
 
 
 Router::get('/stock-dashboard', "items.dashboard"); // Displays all items dashboard
+Router::get('/restock-items', "items.restock"); // Displays restock dashboard
+Router::post('/update-quantity', "items.update_item_quantity"); // Update item quantity
 Router::get('/single-item', "items.single_item"); // Displays single item dashboard
 Router::get('/update-item-form', "items.update_item_form"); // Displays update item form
 Router::post('/update-item', "items.update_item"); // Update item info
@@ -58,18 +60,20 @@ Router::post('/create-item', "items.create_item"); // Create new item
 Router::get('/out-of-stock', "items.out_of_stock"); // Displays out of stock form
 
 
-Router::get('/selling-dashboard', "transactions.selling_dashboard"); // 
-Router::get('/user-record', "transactions.user_record"); // 
-Router::get('/records-dashboard', "transactions.display_records"); // 
-Router::get('/delete-record', "transactions.delete_record"); // 
-Router::get('/update-record-form', "transactions.update_record_form"); // 
-Router::post('/update-record', "transactions.update_record"); // 
-Router::get('/info-dashboard', "transactions.info_dashboard"); // 
+Router::get('/selling-dashboard', "transactions.selling_dashboard"); // Displays selling dashboard
+Router::get('/user-record', "transactions.user_record"); // Displays user's transaction record
+Router::get('/records-dashboard', "transactions.display_records"); // Displays all transacion records
+Router::get('/delete-record', "transactions.delete_record"); // Delete transaction
+Router::get('/update-record-form', "transactions.update_record_form"); // Displays update transaction form
+Router::post('/update-record', "transactions.update_record"); // Update transaction
+Router::get('/info-dashboard', "transactions.info_dashboard"); // Displays info dashboard
+Router::get('/get-single-transaction', "transactions.single_transaction"); // Displays single transaction
 
 
-Router::post('/api/create-transaction', "api.create_transaction"); // 
-Router::get('/api/get-transaction', "api.get_transaction"); // 
-
+Router::post('/api/create-transaction', "api.create_transaction"); //  Create new transaction using ajax
+Router::get('/api/get-transaction', "api.get_transaction"); // Displays all user transaction using ajax
+Router::put('/api/update-transaction', "api.update_transaction"); // Update user transaction using ajax
+Router::delete('/api/delete-transaction', "api.delete_transaction"); // Delete transaction using ajax
 
 
 

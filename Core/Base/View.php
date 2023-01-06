@@ -7,6 +7,14 @@ namespace Core\Base;
  */
 class View
 {
+
+    
+    /**
+     * the constructer of the class
+     *
+     * @param string $view
+     * @param array $data
+     */
     public function __construct(string $view, array $data = array())
     {
         $view = \str_replace('.', '/', $view);

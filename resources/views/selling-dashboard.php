@@ -1,3 +1,13 @@
+<?PHP
+
+if($_SESSION['user']['permission']=="admin"){}
+elseif($_SESSION['user']['permission']=="seller"){}
+else{
+   header('Location: 404.php'); 
+}
+
+?>
+
 <div class="text-center my-5 p-5">
     <h1 class="border-bottom border-3 m-auto w-50"><i class="fa-sharp fa-solid fa-cart-shopping"></i> Selling Dashboard</h1>
 
@@ -16,7 +26,7 @@
             <select name="item_name" id="item_name" value="">
 
                 <?PHP foreach ($data as $item) :?>
-                <option value="<?=$item->item_name?>"><?=$item->item_name?></option>
+                <option value="<?=htmlspecialchars($item->item_name)?>"><?=htmlspecialchars($item->item_name)?></option>
                 <?PHP endforeach;?>
 
             </select>
@@ -41,7 +51,7 @@
 
         <div class="card text-bg-light mb-3 p-0" style="width: 25rem;height: 12rem;">
             <div class="card-header">
-                <?=$item->item_name;?>
+                <?=htmlspecialchars($item->item_name);?>
             </div>
             <div class="d-flex flex-row ">
                 <div class="text-center my-2 ms-2">
@@ -49,7 +59,7 @@
                 </div>
                 <div class="m-auto">
                     <div class="card-body text-center">
-                        <p class="card-text">Item: <?=$item->item_name;?><br>Price: <?=$item->selling_price;?><br>QTY: <?=$item->quantity;?></p>
+                        <p class="card-text">Item: <?=htmlspecialchars($item->item_name);?><br>Price: <?=$item->selling_price;?><br>QTY: <?=$item->quantity;?></p>
                     </div>
                    
                 </div>

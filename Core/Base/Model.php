@@ -2,22 +2,39 @@
 
 namespace Core\Base;
 
+/**
+ * control operation on the database
+ */
 class Model
 {
     public $connection;
     protected $table;
 
+    
+    /**
+     * the constructer of the class
+     */
     public function __construct()
     {
         $this->connection(); // connection is ready
         $this->relate_table();
     }
 
+
+    /**
+     * the destructer of the class
+     */
     public function __destruct()
     {
         $this->connection->close();
     }
 
+
+    /**
+     * get all data from the database
+     *
+     * @return array $data
+     */
     public function get_all(): array
     {
         $data = array();
@@ -31,6 +48,13 @@ class Model
         return $data;
     }
 
+
+    /**
+     * get all data from database by id
+     *
+     * @param integer $id
+     * @return object
+     */
     public function get_by_id($id)
     {
         $stmt = $this->connection->prepare("SELECT * FROM $this->table WHERE id=?"); // prepare the sql statement
@@ -42,6 +66,13 @@ class Model
         return $result->fetch_object();
     }
 
+
+    /**
+     * delete from database by id
+     *
+     * @param integer $id
+     * @return string $result
+     */
     public function delete($id)
     {
         $stmt = $this->connection->prepare("DELETE FROM $this->table WHERE id=?"); // prepare the sql statement
@@ -53,6 +84,13 @@ class Model
         return $result;
     }
 
+
+    /**
+     * create new row on the database
+     *
+     * @param array $data
+     * @return integer $last_id
+     */
     public function create($data)
     {
         // Get dynamic keys title, contenta
@@ -105,6 +143,13 @@ class Model
         return $last_id;
     }
 
+
+    /**
+     * update row on the database
+     *
+     * @param array $data
+     * @return void
+     */
     public function update($data)
     {
         $set_values = '';
@@ -125,10 +170,16 @@ class Model
             SET $set_values
             WHERE id=$id
         ";
-       // var_dump($sql);die;
+      // var_dump($sql);die;
         $this->connection->query($sql);
     }
 
+
+    /**
+     * prepare the connection with the database
+     *
+     * @return void
+     */
     protected function connection()
     {
         $servername = "localhost";
@@ -145,6 +196,12 @@ class Model
         }
     }
 
+
+    /**
+     * prepare the database table name
+     *
+     * @return void
+     */
     protected function relate_table()
     {
         $table_name = \get_class($this);

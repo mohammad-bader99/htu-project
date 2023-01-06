@@ -5,6 +5,10 @@ namespace Core\Base;
 use Core\Helpers\Helper;
 use Core\Model\User;
 
+
+/**
+ * control the opearation 
+ */
 abstract class Controller
 {
     abstract public function render();
@@ -12,17 +16,30 @@ abstract class Controller
     protected $view = null;
     protected $data = array();
 
+
+    /**
+     * reqirect the user to his/her view
+     *
+     * @return void
+     */
     protected function view()
     {
         new View($this->view, $this->data);
     }
 
+
+    /**
+     * check the user permission
+     *
+     * @return void
+     */
     protected function auth()
     {
         if (!isset($_SESSION['user'])) {
             Helper::redirect('/login');
         }
     }
+
 
     /**
      * Check if the user has the assigned permissions.
@@ -45,6 +62,7 @@ abstract class Controller
         }
         // if any of the permission sets are not assigned to the user, redirect to the dashboard
     }
+    
 
     /**
      * Change the header view. check View.php line 18

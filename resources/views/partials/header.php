@@ -80,7 +80,7 @@ if(empty($_SESSION) || !isset($_SESSION['user']))
         
         
         <li class="nav-item">
-            <a type="button" class="btn btn-danger position-absolute end-0 me-5" href="/logout" id="effect">Logout</a>
+            <a id="logout" class="btn btn-danger" <?=$_SESSION['user']['permission']!="admin"?'style="margin-left: 20rem;"':""?>  href="/logout" id="effect">Logout</a>
         </li>
       </ul>
     </div>

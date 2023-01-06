@@ -1,3 +1,13 @@
+<?PHP
+
+if($_SESSION['user']['permission']=="admin"){}
+elseif($_SESSION['user']['permission']=="seller"){}
+else{
+   header('Location: 404.php'); 
+}
+
+?>
+
 
 <div class="input-group w-100 my-5">
             <button id="get-record" class="btn btn-secondary position-absolute top-0 end-0" style="margin-right: 200px;"><i class="fa-solid fa-database"></i> Transaction Record</button>
@@ -27,6 +37,7 @@
             url: "/api/get-transaction",
             success: function(response) {
                 response.body.forEach(record => { 
+                    if(record['0']==''){return;}
                     $('#table-row').append(`
                     <tr class="my-3">
                         <th scope="row">${record['0']['id']}</th>
@@ -34,12 +45,16 @@
                         <td>${record['0']['item_qty']}</td>
                         <td>${record['0']['item_price']}</td> 
                         <td>${record['0']['total']}</td> 
+                        <td><a href="/get-single-transaction?id=${record['0']['id']}" class="btn btn-warning" style="width:5rem;"><i class="fa-solid fa-eye"></i></a></td>
                         <td></td>
                     </tr>
+
                     `);
-                });
+            });
             }
         });
     });
+
+
 
 </script>
