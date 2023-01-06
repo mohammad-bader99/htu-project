@@ -33,7 +33,7 @@ else{
     </div>
     <div class="input-group w-25">
             <span class="input-group-text">Quantity</span>
-            <input type="number" aria-label="quantity" id="qty" required class="form-control" name="quantity" min=0>
+            <input type="number" aria-label="quantity" id="qty" style="width:5rem;" required class="form-control" name="quantity" min=0>
     </div>
     <div class="input-group w-25">
             <button class="btn btn-primary m-auto" id="sell_button"><i class="fa-solid fa-dollar-sign"></i> Sell</button>
@@ -49,7 +49,7 @@ else{
 
     <?PHP foreach ($data as $item) :?>
 
-        <div class="card text-bg-light mb-3 p-0" style="width: 25rem;height: 12rem;">
+        <div class="card text-bg-light mb-3 p-0 m-auto" style="width: 25rem;height: 12rem;">
             <div class="card-header">
                 <?=htmlspecialchars($item->item_name);?>
             </div>

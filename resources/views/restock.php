@@ -17,7 +17,7 @@ else{
     <?PHP foreach ($data as $item) :?>
 
 
-    <form action="/update-quantity" method="POST" class="col-4" style="width: 18rem;height:27rem;border: 11px groove #115DFF;border-radius: 25px;">
+    <form action="/update-quantity" method="POST" class="col-4 m-auto" style="width: 18rem;height:27rem;border: 11px groove #115DFF;border-radius: 25px;">
         <div class="card">
             <img src="resources/views/photos/<?=$item->item_image;?>" style="width:100%; height:15rem;" class="card-img-top p-3 border-bottom border-primary" alt="item image">
             <div class="card-body text-center">
